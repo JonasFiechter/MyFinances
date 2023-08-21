@@ -60,7 +60,7 @@ def create_account_page(request: HttpRequest):
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
-        password_confirm = request.POST.get('confirm_password')
+        password_confirm = request.POST.get('password_confirm')
 
         if password != password_confirm:
             messages.error(request, "Passwords don't match")

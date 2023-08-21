@@ -3,125 +3,111 @@
 <html :class="{ 'theme-dark': dark }"
       x-data="data()"
       lang="en">
-{% include 'core/partials/base/_head.html' %}
+{% include 'core/partials/base/_head.html' with title="Login" %}
 <body>
-  <div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
-    <div class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
-      <div class="flex flex-col overflow-y-auto md:flex-row">
-        <div class="h-32 md:h-auto md:w-1/2">
-            <img
-                    aria-hidden="true"
-                    class="object-cover w-full h-full dark:hidden"
-                    src="{% static 'img/create-account-office.jpeg' %}"
-                    alt="Office"
-            />
-            <img
-                    aria-hidden="true"
-                    class="hidden object-cover w-full h-full dark:block"
-                    src="{% static 'img/create-account-office-dark.jpeg' %}"
-                    alt="Office"
-            />
-          </div>
-        <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
-          <div class="w-full">
-               {% include 'core/partials/base/toasts.html' %}
-            <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">Create account</h1>
+<div class="flex min-h-screen items-center justify-center p-6">
+    <div class="max-w-screen-md card center">
+        <form method="post" novalidate class="card-body group">
+            {% csrf_token %}
+            {% include 'core/partials/base/toasts.html' %}
+            <div class="card-header">Create account</div>
+            <div class="divider"></div>
+            {% if google_enabled or github_enabled %}
+                <div class="flex w-full flex-col gap-2">
+                    <div class="flex w-full flex-col gap-2">
+                        {% if google_enabled %}
+                            <a class="gap-2 btn bg-border" href="{% url 'social:begin' 'google-oauth2' %}">
+                                <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" viewBox="0 0 48 48" enable-background="new 0 0 48 48" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657        C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36        c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571 c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                                </svg>
+                                <span>Sign in with google</span>
+                            </a>
+                        {% endif %}
 
-            <form class="w-full group"
-                  method="post"
-                  novalidate
-                  onkeydown="return event.key != 'Enter';"
-            >
+                        {% if github_enabled %}
+                            <a class="gap-2 btn bg-border" href="{% url 'social:begin' 'github' %}">
+                                {% include 'core/components/icon.html' with icon="github" brand=True %}
+                                <span>Sign in with github</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="my-6 text-xs divider text-content2">or continue with</div>
+            {% endif %}
 
-              {% csrf_token %}
-              <label class="block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Email</span>
-                <input
-                        name="email"
-                        type="email"
-                        class="peer block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                        placeholder="jane@example.com"
-                        required
-                        pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-                        value="{{ attempted_email }}"
-                />
-                <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
-                    Please enter a valid email address
-                </span>
-              </label>
+            <div class="form-group group">
+                <div class="form-field">
+                    <label class="form-label">Email address</label>
 
-              <label class="block mt-4 text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Password</span>
-                <input
-                        name="password"
-                        type="password"
-                        class="peer block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                        placeholder="***************"
-                        required
-                        minlength="8"
-                />
-                <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
-                      Password should be at least 8 characters long
-                </span>
-              </label>
+                    <input placeholder="jane@example.com" type="email" class="max-w-full input peer" required name="email"
+                           pattern="[^@\s]+@[^@\s]+\.[^@\s]+" value="{% if attempted_email %}{{ attempted_email }}{% endif %}"
+                    />
 
-              <label class="block mt-4 text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Confirm password</span>
-                <input
-                        name="confirm_password"
-                        type="password"
-                        class="peer block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                        placeholder="***************"
-                        required
-                        minlength="8"
-                />
-                  <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):block">
-                      Password should be at least 8 characters long
-                </span>
-              </label>
-
-              <div class="mt-6 flex text-sm">
-                  <label class="flex items-center dark:text-gray-400">
-                        <input type="checkbox"
-                               class="form-checkbox focus:shadow-outline-purple dark:focus:shadow-outline-gray peer text-purple-600 focus:border-purple-400 focus:outline-none"
-                               required/>
-                        <span class="ml-2 underline decoration-red-500 peer-checked:no-underline">
+                    <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                        <span class="form-label-alt">Please enter a valid email.</span>
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label class="form-label">
+                        <span>Password</span>
+                    </label>
+                    <input
+                            name="password"
+                            type="password"
+                            class="max-w-full input peer"
+                            placeholder="***************"
+                            required
+                            minlength="8"
+                    />
+                    <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                        <span class="form-label-alt">Please enter a valid password</span>
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label class="form-label">
+                        <span>Confirm Password</span>
+                    </label>
+                    <input
+                            name="password_confirm"
+                            type="password"
+                            class="max-w-full input peer"
+                            placeholder="***************"
+                            required
+                            minlength="8"
+                    />
+                    <label class="form-label peer-[&amp;:not(:placeholder-shown):not(:focus):invalid]:block hidden">
+                        <span class="form-label-alt">Please enter a valid password, same as above</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-control justify-between">
+                <label class="flex cursor-pointer gap-2">
+                    <input type="checkbox" class="checkbox peer no " required/>
+                    <span class="underline decoration-red-500 peer-checked:no-underline">
                             I agree to the
-                            <a href="{% url 'index' %}"
-                               class=" underline decoration-red-500 [.peer:checked~*_&]:decoration-gray-400 font-bold">
+                            <a href="/" class=" underline decoration-red-500 [.peer:checked~*_&amp;]:decoration-gray-400 font-bold">
                                 terms of service
                             </a>
                         </span>
-                  </label>
-              </div>
+                </label>
+                <label class="form-label">
+                    <a class="link link-underline-hover link-primary text-sm" href="{% url 'login forgot_password' %}">Forgot your password?</a>
+                </label>
+            </div>
 
-
-              <button
-                      type="submit"
-                      class="group-invalid:pointer-events-none group-invalid:disabled group-invalid:opacity-30 block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-              >
+            <button class="my-5 group-invalid:pointer-events-none btn-block group-invalid:opacity-30 group-invalid:disabled btn btn-primary">
                 Create account
-              </button>
-            </form>
+            </button>
 
-            <hr class="my-8"/>
+            <div class="form-field">
+                <div class="form-control">
+                    <a class="text-sm link link-underline-hover link-primary" href="{% url 'login create_account' %}">Don't have an account? Sign Up</a>
+                </div>
+            </div>
 
-              {% include 'core/components/buttons/brand-button.html' with brand="Github" %}
-              {% include 'core/components/buttons/brand-button.html' with disabled=True brand="Microsoft" %}
-
-
-               <p class="mt-4">
-              <a
-                      class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                      href="{% url 'login' %}"
-              >
-                Already have an account? Login
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
+        </form>
     </div>
-  </div>
-</body>
-</html>
+</div>
