@@ -4,7 +4,7 @@ FROM python:3.9-alpine
 # Set the working directory
 WORKDIR /MyFinances
 # Copy the project files
-COPY ../../../ .
+COPY . .
 
 # Install dependencies
 RUN apk add --update mariadb-connector-c-dev
