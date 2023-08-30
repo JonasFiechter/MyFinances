@@ -4,7 +4,7 @@ FROM python:3.9-alpine
 # Set the working directory
 WORKDIR /MyFinances
 # Copy the project files
-COPY . .
+COPY ../../../ .
 
 # Install dependencies
 RUN apk add --update mariadb-connector-c-dev
@@ -15,7 +15,7 @@ RUN apk add --no-cache git
 CMD ["git","--version"]
 RUN pip install mariadb
 RUN pip install mysqlclient
-RUN pip install -r /requirements.txt
+RUN pip install -r requirements.txt # error line
 
 
 # Set the entrypoint
