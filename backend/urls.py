@@ -4,7 +4,7 @@ from django.views.static import serve
 from django.urls import re_path as url
 from django.urls import path, include
 
-from backend.views.core import other, passwords, api, settings as settings_v, invoices
+from backend.views.core import other, passwords, api, settings as settings_v, invoices, expenses
 from backend.views.core.other.index import index, dashboard
 
 # from backend.views.core.api.v1.user import settings
@@ -23,12 +23,13 @@ urlpatterns = [
                   path('login/external/', include('social_django.urls', namespace='social')),
                   # path('dashboard/invoices/<str:id>/edit', invoices.dashboard.invoices_dashboard_id, name='invoices dashboard'),
 
+                  path('dashboard/expenses/', expenses.dashboard.expenses_dashboard, name='expenses dashboard'),
+
                   path('login/', other.login.login_page, name='login'),
                   path('logout/', other.login.logout_view, name='logout'),
                   path('login/create_account', other.login.create_account_page, name='login create_account'),
                   path('login/forgot_password', other.login.forgot_password_page, name='login forgot_password'),
-                  path('login/reset-password/', passwords.generate.password_reset, name='user set password reset')
-                  ,
+                  path('login/reset-password/', passwords.generate.password_reset, name='user set password reset'),
                   # path('api/v1/user/profile/toggle_theme', api.v1.user.profile.toggle_theme, name='api v1 user toggle_theme'),
 
                   path('login/set-password/<str:secret>', passwords.view.set_password, name='user set password'),

@@ -13,8 +13,8 @@
     },
     {
         "name": "Expenses",
-        "urls": ["expenses"],
-        "url": "",
+        "urls": ["expenses dashboard"],
+        "url": "expenses dashboard",
         "icon": "money-bill"
     },
     {
